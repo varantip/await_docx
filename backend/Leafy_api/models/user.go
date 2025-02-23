@@ -11,7 +11,6 @@ import (
 
 func init() {
 	orm.RegisterModel(new(User))
-	fmt.Println("hey")
 }
 
 type User struct {

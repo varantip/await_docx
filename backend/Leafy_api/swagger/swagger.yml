@@ -12,6 +12,40 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 basePath: /v1
 paths:
+  /base_plants/:
+    get:
+      tags:
+      - base_plants
+      description: |-
+        get all PlantTypes
+        <br>
+      operationId: PlantTypeController.GetAll
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.PlantType'
+  /base_plants/{id}:
+    get:
+      tags:
+      - base_plants
+      description: |-
+        get plant_type by id
+        <br>
+      operationId: PlantTypeController.Get
+      parameters:
+      - in: path
+        name: id
+        description: The key for staticblock
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.PlantType'
+        "403":
+          description: :id is empty
   /user/:
     get:
       tags:
@@ -145,6 +179,20 @@ paths:
         "200":
           description: '{string} logout success'
 definitions:
+  models.PlantType:
+    title: PlantType
+    type: object
+    properties:
+      Name:
+        type: string
+      PlantType_id:
+        type: integer
+        format: int64
+      Treatment:
+        type: string
+      WateringFrequency:
+        type: integer
+        format: int64
   models.User:
     title: User
     type: object
@@ -162,3 +210,6 @@ tags:
 - name: user
   description: |
     Operations about Users
+- name: base_plants
+  description: |
+    Операции с типами растений

@@ -46,6 +46,40 @@ paths:
             $ref: '#/definitions/models.PlantType'
         "403":
           description: :id is empty
+  /diseases/:
+    get:
+      tags:
+      - diseases
+      description: |-
+        get all Diseases
+        <br>
+      operationId: DiseaseController.GetAll
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Disease'
+  /diseases/{id}:
+    get:
+      tags:
+      - diseases
+      description: |-
+        get Disease by id
+        <br>
+      operationId: DiseaseController.Get
+      parameters:
+      - in: path
+        name: id
+        description: The key for staticblock
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Disease'
+        "403":
+          description: :id is empty
   /user/:
     get:
       tags:
@@ -153,13 +187,13 @@ paths:
       operationId: UserController.Login
       parameters:
       - in: query
-        name: username
-        description: The username for login
+        name: login
+        description: The login
         required: true
         type: string
       - in: query
         name: password
-        description: The password for login
+        description: The password
         required: true
         type: string
       responses:
@@ -179,6 +213,17 @@ paths:
         "200":
           description: '{string} logout success'
 definitions:
+  models.Disease:
+    title: Disease
+    type: object
+    properties:
+      Disease_id:
+        type: integer
+        format: int64
+      Name:
+        type: string
+      Treatment:
+        type: string
   models.PlantType:
     title: PlantType
     type: object
@@ -213,3 +258,6 @@ tags:
 - name: base_plants
   description: |
     Операции с типами растений
+- name: diseases
+  description: |
+    Операции с заболеваниями

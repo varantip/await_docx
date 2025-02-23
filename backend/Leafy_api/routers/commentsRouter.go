@@ -7,6 +7,24 @@ import (
 
 func init() {
 
+    beego.GlobalControllerRouter["Leafy_api/controllers:DiseaseController"] = append(beego.GlobalControllerRouter["Leafy_api/controllers:DiseaseController"],
+        beego.ControllerComments{
+            Method: "GetAll",
+            Router: `/`,
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["Leafy_api/controllers:DiseaseController"] = append(beego.GlobalControllerRouter["Leafy_api/controllers:DiseaseController"],
+        beego.ControllerComments{
+            Method: "Get",
+            Router: `/:id`,
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
     beego.GlobalControllerRouter["Leafy_api/controllers:PlantTypeController"] = append(beego.GlobalControllerRouter["Leafy_api/controllers:PlantTypeController"],
         beego.ControllerComments{
             Method: "GetAll",

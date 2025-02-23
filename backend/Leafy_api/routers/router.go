@@ -25,6 +25,11 @@ func init() {
 				&controllers.PlantTypeController{},
 			),
 		),
+		beego.NSNamespace("/diseases",
+			beego.NSInclude(
+				&controllers.DiseaseController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 }

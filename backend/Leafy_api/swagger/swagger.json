@@ -61,6 +61,52 @@
                 }
             }
         },
+        "/diseases/": {
+            "get": {
+                "tags": [
+                    "diseases"
+                ],
+                "description": "get all Diseases\n\u003cbr\u003e",
+                "operationId": "DiseaseController.GetAll",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.Disease"
+                        }
+                    }
+                }
+            }
+        },
+        "/diseases/{id}": {
+            "get": {
+                "tags": [
+                    "diseases"
+                ],
+                "description": "get Disease by id\n\u003cbr\u003e",
+                "operationId": "DiseaseController.Get",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The key for staticblock",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.Disease"
+                        }
+                    },
+                    "403": {
+                        "description": ":id is empty"
+                    }
+                }
+            }
+        },
         "/user/": {
             "get": {
                 "tags": [
@@ -114,15 +160,15 @@
                 "parameters": [
                     {
                         "in": "query",
-                        "name": "username",
-                        "description": "The username for login",
+                        "name": "login",
+                        "description": "The login",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "in": "query",
                         "name": "password",
-                        "description": "The password for login",
+                        "description": "The password",
                         "required": true,
                         "type": "string"
                     }
@@ -242,6 +288,22 @@
         }
     },
     "definitions": {
+        "models.Disease": {
+            "title": "Disease",
+            "type": "object",
+            "properties": {
+                "Disease_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Treatment": {
+                    "type": "string"
+                }
+            }
+        },
         "models.PlantType": {
             "title": "PlantType",
             "type": "object",
@@ -290,6 +352,10 @@
         {
             "name": "base_plants",
             "description": "Операции с типами растений\n"
+        },
+        {
+            "name": "diseases",
+            "description": "Операции с заболеваниями\n"
         }
     ]
 }

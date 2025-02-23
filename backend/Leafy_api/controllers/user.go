@@ -132,14 +132,15 @@ func (u *UserController) Delete() {
 
 // @Title Login
 // @Description Logs user into the system
-// @Param	username		query 	string	true		"The username for login"
-// @Param	password		query 	string	true		"The password for login"
+// @Param	login			query 	string	true		"The login"
+// @Param	password		query 	string	true		"The password"
 // @Success 200 {string} login success
 // @Failure 403 user not exist
 // @router /login [get]
 func (u *UserController) Login() {
 	var user models.User
-	json.Unmarshal(u.Ctx.Input.RequestBody, &user)
+	user.Login = u.Ctx.Input.Query("login")
+	user.Password = u.Ctx.Input.Query("password")
 	token := models.Login(user)
 	u.Data["json"] = Response{Err: false, Data: token}
 	// установка значения сессии

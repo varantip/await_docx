@@ -39,6 +39,6 @@ func GetAllPlantTypes() (pts *[]PlantType) {
 	o := orm.NewOrmUsingDB("Leafy")
 	var ptypes []PlantType
 	qb, _ := orm.NewQueryBuilder("postgres")
-	o.Raw(qb.Select("PlantType_id", "WateringFrequency", "Name", "Treatment").From("PlantType").Limit(20).String()).QueryRows(&ptypes)
+	o.Raw(qb.Select("PlantType_id", "WateringFrequency", "Name", "Treatment").From("PlantType").Limit(20).String()).QueryRows(&ptypes) //лимит 20, т.к. в MVP у нас будет ограниченное количество типов растений
 	return &ptypes
 }

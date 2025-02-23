@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"Leafy_api/models"
-	"fmt"
 
 	_ "github.com/beego/beego/v2/client/orm"
 	beego "github.com/beego/beego/v2/server/web"
@@ -30,7 +29,6 @@ func (pt *PlantTypeController) GetAll() {
 // @Failure 403 :id is empty
 // @router /:id [get]
 func (pt *PlantTypeController) Get() {
-	fmt.Println("im called")
 	id, err := pt.GetInt64(":id")
 	if err == nil {
 		ptype, err := models.GetPlantType(id)

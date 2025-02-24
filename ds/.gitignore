@@ -3,3 +3,5 @@ config.yaml
 anaconda_projects
 pics
 apitest.ipynb
+result
+logs

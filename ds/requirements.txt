@@ -7,7 +7,7 @@ scikit-learn>=1.0.0
 torch>=1.12.0
 pillow>=9.0.0
 pyyaml>=6.0
-transformers>=4.48.3
+transformers[torch]
 nltk>=3.7
 spacy>=3.4.0
 jupyterlab>=3.4.0
@@ -17,3 +17,12 @@ plotly>=5.9.0
 dash>=2.6.0
 kagglehub>=0.3.7
 tf-keras>=2.18.0
+datasets
+evaluate
+threadpoolctl
+sympy==1.31.1
+network
+Pillow
+accelerate
+
+

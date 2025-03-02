@@ -114,6 +114,16 @@
                 ],
                 "description": "get all Users\n\u003cbr\u003e",
                 "operationId": "UserController.GetAll",
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "Authorization header. example: Bearer {token}",
+                        "schema": {
+                            "$ref": "#/definitions/true"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "",
@@ -190,6 +200,16 @@
                 ],
                 "description": "Logs out current logged in user session\n\u003cbr\u003e",
                 "operationId": "UserController.logout",
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "Authorization header. example: Bearer {token}",
+                        "schema": {
+                            "$ref": "#/definitions/true"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "{string} logout success"
@@ -285,6 +305,35 @@
                     }
                 }
             }
+        },
+        "/user_plants/{uid}": {
+            "get": {
+                "tags": [
+                    "user_plants"
+                ],
+                "description": "get UserPlant by User_id\n\u003cbr\u003e",
+                "operationId": "UserPlantController.Get",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "user id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.Disease"
+                        }
+                    },
+                    "403": {
+                        "description": ":uid is empty"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -342,6 +391,10 @@
                     "format": "int64"
                 }
             }
+        },
+        "true": {
+            "title": "true",
+            "type": "object"
         }
     },
     "tags": [
@@ -356,6 +409,10 @@
         {
             "name": "diseases",
             "description": "Операции с заболеваниями\n"
+        },
+        {
+            "name": "user_plants",
+            "description": "Operations about User's plants\n"
         }
     ]
 }

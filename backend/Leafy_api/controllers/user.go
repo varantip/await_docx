@@ -26,13 +26,17 @@ var SecretKey = []byte("some-key")
 // Проверка заголовков для всех запросов
 func (u *UserController) HandlerFunc(rules string) bool {
 	fmt.Println(u.Ctx.Request.Header["Authorization"])
+	fmt.Println(u.GetSession("accessToken"), "====")
 	switch rules {
 	case "GetAll", "Logout": // rules - в значении имеет название функции, которая выполняется при вызове метода
 		if u.GetSession("accessToken") == nil { // GetSession возвращает nil если нет ключа, поэтому приходится проверять
+
 			break
 		}
 		accessToken := u.GetSession("accessToken").(string)
+		fmt.Println(accessToken, "acctok")
 		arrayToken := u.Ctx.Request.Header["Authorization"]
+		fmt.Println(arrayToken, "arrtok")
 		token, _ := models.VerifyToken(accessToken)                                    // забираем данные из токена
 		fmt.Println(token, token["id"])                                                // Можем делать проверку
 		if len(arrayToken) > 0 && slices.Contains(arrayToken, "Bearer "+accessToken) { //проверка токена, тут проверка через сессию
@@ -61,6 +65,7 @@ func (u *UserController) Post() {
 
 // @Title GetAll
 // @Description get all Users
+// @Param Authorization header true "Authorization header. example: Bearer {token} "
 // @Success 200 {object} models.User
 // @router / [get]
 func (u *UserController) GetAll() {
@@ -150,6 +155,7 @@ func (u *UserController) Login() {
 
 // @Title logout
 // @Description Logs out current logged in user session
+// @Param Authorization header true "Authorization header. example: Bearer {token} "
 // @Success 200 {string} logout success
 // @router /logout [get]
 func (u *UserController) Logout() {

@@ -106,4 +106,13 @@ func init() {
             Filters: nil,
             Params: nil})
 
+    beego.GlobalControllerRouter["Leafy_api/controllers:UserPlantController"] = append(beego.GlobalControllerRouter["Leafy_api/controllers:UserPlantController"],
+        beego.ControllerComments{
+            Method: "Get",
+            Router: `/:id`,
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
 }

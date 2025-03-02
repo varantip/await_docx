@@ -88,6 +88,12 @@ paths:
         get all Users
         <br>
       operationId: UserController.GetAll
+      parameters:
+      - in: header
+        name: Authorization
+        description: 'Authorization header. example: Bearer {token}'
+        schema:
+          $ref: '#/definitions/true'
       responses:
         "200":
           description: ""
@@ -209,9 +215,36 @@ paths:
         Logs out current logged in user session
         <br>
       operationId: UserController.logout
+      parameters:
+      - in: header
+        name: Authorization
+        description: 'Authorization header. example: Bearer {token}'
+        schema:
+          $ref: '#/definitions/true'
       responses:
         "200":
           description: '{string} logout success'
+  /user_plants/{uid}:
+    get:
+      tags:
+      - user_plants
+      description: |-
+        get UserPlant by User_id
+        <br>
+      operationId: UserPlantController.Get
+      parameters:
+      - in: path
+        name: uid
+        description: user id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Disease'
+        "403":
+          description: :uid is empty
 definitions:
   models.Disease:
     title: Disease
@@ -251,6 +284,9 @@ definitions:
       User_id:
         type: integer
         format: int64
+  "true":
+    title: "true"
+    type: object
 tags:
 - name: user
   description: |
@@ -261,3 +297,6 @@ tags:
 - name: diseases
   description: |
     Операции с заболеваниями
+- name: user_plants
+  description: |
+    Operations about User's plants

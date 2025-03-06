@@ -25,6 +25,7 @@ var SecretKey = []byte("some-key")
 
 // Проверка заголовков для всех запросов
 func (u *UserController) HandlerFunc(rules string) bool {
+	fmt.Println(u.Ctx.Request)
 	fmt.Println(u.Ctx.Request.Header["Authorization"])
 	fmt.Println(u.GetSession("accessToken"), "====")
 	switch rules {
@@ -67,6 +68,7 @@ func (u *UserController) Post() {
 // @Description get all Users
 // @Param Authorization header true "Authorization header. example: Bearer {token} "
 // @Success 200 {object} models.User
+// @Failure 401 :not authorized
 // @router / [get]
 func (u *UserController) GetAll() {
 	users := models.GetAllUsers()
@@ -76,7 +78,7 @@ func (u *UserController) GetAll() {
 
 // @Title Get
 // @Description get user by uid
-// @Param	uid		path 	string	true		"The key for staticblock"
+// @Param	uid		path 	string	true		"The uid"
 // @Success 200 {object} models.User
 // @Failure 403 :uid is empty
 // @router /:uid [get]
@@ -147,9 +149,12 @@ func (u *UserController) Login() {
 	user.Login = u.Ctx.Input.Query("login")
 	user.Password = u.Ctx.Input.Query("password")
 	token := models.Login(user)
-	u.Data["json"] = Response{Err: false, Data: token}
-	// установка значения сессии
-	u.SetSession("accessToken", token)
+	if token != "" {
+		u.Data["json"] = Response{Err: false, Data: token}
+		// установка значения сессии
+		u.SetSession("accessToken", token)
+		fmt.Println(u.Ctx.Output)
+	}
 	u.ServeJSON()
 }
 

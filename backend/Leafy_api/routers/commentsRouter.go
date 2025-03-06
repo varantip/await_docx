@@ -25,6 +25,33 @@ func init() {
             Filters: nil,
             Params: nil})
 
+    beego.GlobalControllerRouter["Leafy_api/controllers:NotificationController"] = append(beego.GlobalControllerRouter["Leafy_api/controllers:NotificationController"],
+        beego.ControllerComments{
+            Method: "Post",
+            Router: `/`,
+            AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["Leafy_api/controllers:NotificationController"] = append(beego.GlobalControllerRouter["Leafy_api/controllers:NotificationController"],
+        beego.ControllerComments{
+            Method: "Get",
+            Router: `/:uid`,
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["Leafy_api/controllers:NotificationController"] = append(beego.GlobalControllerRouter["Leafy_api/controllers:NotificationController"],
+        beego.ControllerComments{
+            Method: "Delete",
+            Router: `/:uid`,
+            AllowHTTPMethods: []string{"delete"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
     beego.GlobalControllerRouter["Leafy_api/controllers:PlantTypeController"] = append(beego.GlobalControllerRouter["Leafy_api/controllers:PlantTypeController"],
         beego.ControllerComments{
             Method: "GetAll",
@@ -109,7 +136,16 @@ func init() {
     beego.GlobalControllerRouter["Leafy_api/controllers:UserPlantController"] = append(beego.GlobalControllerRouter["Leafy_api/controllers:UserPlantController"],
         beego.ControllerComments{
             Method: "Get",
-            Router: `/:id`,
+            Router: `/:uid`,
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["Leafy_api/controllers:WebSocketController"] = append(beego.GlobalControllerRouter["Leafy_api/controllers:WebSocketController"],
+        beego.ControllerComments{
+            Method: "Get",
+            Router: `/`,
             AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),
             Filters: nil,

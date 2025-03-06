@@ -100,6 +100,7 @@ func UpdateUser(uu *User) (err error) {
 func Login(u User) string {
 	o := orm.NewOrmUsingDB("Leafy")
 	err := o.Read(&u, "Login", "Password")
+	fmt.Println(u)
 	if err != orm.ErrNoRows {
 		tokenString, _ := CreateToken(u)
 		return tokenString

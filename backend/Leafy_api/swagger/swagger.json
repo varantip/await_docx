@@ -107,6 +107,82 @@
                 }
             }
         },
+        "/notifications/": {
+            "post": {
+                "tags": [
+                    "notifications"
+                ],
+                "description": "Add a Notification\n\u003cbr\u003e",
+                "operationId": "NotificationController.Post",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "The notfication, date specified like so: YYYY-MM-DD hh:mm:ss+tz (for kaliningrad = 02)",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Notification"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        },
+        "/notifications/{uid}": {
+            "get": {
+                "tags": [
+                    "notifications"
+                ],
+                "description": "Gather Notifs by Id\n\u003cbr\u003e",
+                "operationId": "NotificationController.Get",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "The key for staticblock",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "notifications"
+                ],
+                "description": "Delete all expired notifications\n\u003cbr\u003e",
+                "operationId": "NotificationController.Delete",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "The user_id for which you check and delete notifications",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{string} success"
+                    }
+                }
+            }
+        },
         "/user/": {
             "get": {
                 "tags": [
@@ -130,6 +206,9 @@
                         "schema": {
                             "$ref": "#/definitions/models.User"
                         }
+                    },
+                    "401": {
+                        "description": ":not authorized"
                     }
                 }
             },
@@ -228,7 +307,7 @@
                     {
                         "in": "path",
                         "name": "uid",
-                        "description": "The key for staticblock",
+                        "description": "The uid",
                         "required": true,
                         "type": "string"
                     }
@@ -353,6 +432,27 @@
                 }
             }
         },
+        "models.Notification": {
+            "title": "Notification",
+            "type": "object",
+            "properties": {
+                "Data": {
+                    "type": "string"
+                },
+                "Notif_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "Time": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "User_id": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
         "models.PlantType": {
             "title": "PlantType",
             "type": "object",
@@ -372,6 +472,10 @@
                     "format": "int64"
                 }
             }
+        },
+        "models.Response": {
+            "title": "Response",
+            "type": "object"
         },
         "models.User": {
             "title": "User",
@@ -412,7 +516,11 @@
         },
         {
             "name": "user_plants",
-            "description": "Operations about User's plants\n"
+            "description": "Operations about User's plants(Unfinished)\n"
+        },
+        {
+            "name": "notifications",
+            "description": "Operations about Notifications (as of now, only used in WebSockets, probably wont go in the final app)\n"
         }
     ]
 }

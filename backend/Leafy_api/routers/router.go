@@ -35,6 +35,13 @@ func init() {
 				&controllers.UserPlantController{},
 			),
 		),
+		beego.NSNamespace("/notifications",
+			beego.NSInclude(
+				&controllers.NotificationController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
+	beego.Router("/ws", &controllers.WebSocketController{})
+	beego.Router("/notifs", &controllers.WebSocketController{}, "get:ViewNotifs")
 }

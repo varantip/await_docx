@@ -25,9 +25,6 @@ var SecretKey = []byte("some-key")
 
 // Проверка заголовков для всех запросов
 func (u *UserController) HandlerFunc(rules string) bool {
-	fmt.Println(u.Ctx.Request)
-	fmt.Println(u.Ctx.Request.Header["Authorization"])
-	fmt.Println(u.GetSession("accessToken"), "====")
 	switch rules {
 	case "GetAll", "Logout": // rules - в значении имеет название функции, которая выполняется при вызове метода
 		if u.GetSession("accessToken") == nil { // GetSession возвращает nil если нет ключа, поэтому приходится проверять

@@ -12,9 +12,14 @@ type DiseaseController struct {
 	beego.Controller
 }
 
+type AllDiseasesResponseExample struct {
+	Err  bool             `json:"Err" example:"false"`
+	Data []models.Disease `json:"Data"`
+}
+
 // @Title GetAll
 // @Description get all Diseases
-// @Success 200 {object} models.Disease
+// @Success 200 {object} controllers.AllDiseasesResponseExample
 // @router / [get]
 func (ds *DiseaseController) GetAll() {
 	dss := models.GetAllDiseases()
@@ -24,7 +29,7 @@ func (ds *DiseaseController) GetAll() {
 
 // @Title Get
 // @Description get Disease by id
-// @Param	id		path 	string	true		"The key for staticblock"
+// @Param	id		path 	string	true		"Айди заболевания"
 // @Success 200 {object} models.Disease
 // @Failure 403 :id is empty
 // @router /:id [get]

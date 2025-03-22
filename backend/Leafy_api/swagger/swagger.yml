@@ -1,8 +1,8 @@
 swagger: "2.0"
 info:
-  title: beego Test API
+  title: Leafy API
   description: |
-    beego has a very cool tools to autogenerate documents for your API
+    API Documentation for Leafy app
   version: 1.0.0
   termsOfService: http://beego.me/
   contact:
@@ -24,7 +24,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.PlantType'
+            $ref: '#/definitions/controllers.AllPlantTypesResponseExample'
   /base_plants/{id}:
     get:
       tags:
@@ -36,7 +36,7 @@ paths:
       parameters:
       - in: path
         name: id
-        description: The key for staticblock
+        description: айди типа растения
         required: true
         type: string
       responses:
@@ -58,7 +58,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Disease'
+            $ref: '#/definitions/controllers.AllDiseasesResponseExample'
   /diseases/{id}:
     get:
       tags:
@@ -70,7 +70,7 @@ paths:
       parameters:
       - in: path
         name: id
-        description: The key for staticblock
+        description: Айди заболевания
         required: true
         type: string
       responses:
@@ -80,6 +80,25 @@ paths:
             $ref: '#/definitions/models.Disease'
         "403":
           description: :id is empty
+  /identify/:
+    post:
+      tags:
+      - identify
+      description: |-
+        identify a disease.
+        <br>
+      operationId: IdentController.Ident a disease
+      parameters:
+      - in: formData
+        name: body
+        description: "true"
+        type: file
+      responses:
+        "200":
+          description: ""
+          schema:
+            format: int64
+            type: integer
   /notifications/:
     post:
       tags:
@@ -91,8 +110,8 @@ paths:
       parameters:
       - in: body
         name: body
-        description: 'The notfication, date specified like so: YYYY-MM-DD hh:mm:ss+tz
-          (for kaliningrad = 02)'
+        description: 'The notfication, date specified like so: YYYY-MM-DDThh:mm:sstz
+          (for kaliningrad tz = +0200)'
         required: true
         schema:
           $ref: '#/definitions/models.Notification'
@@ -142,13 +161,13 @@ paths:
       tags:
       - user
       description: |-
-        get all Users
+        get user using jwt token
         <br>
-      operationId: UserController.GetAll
+      operationId: UserController.Get
       parameters:
       - in: header
         name: Authorization
-        description: 'Authorization header. example: Bearer {token}'
+        description: 'хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}'
         schema:
           $ref: '#/definitions/true'
       responses:
@@ -156,8 +175,34 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/models.User'
-        "401":
-          description: :not authorized
+        "404":
+          description: no such user
+    put:
+      tags:
+      - user
+      description: |-
+        update the user
+        <br>
+      operationId: UserController.Update
+      parameters:
+      - in: header
+        name: Authorization
+        description: 'хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}'
+        schema:
+          $ref: '#/definitions/true'
+      - in: body
+        name: body
+        description: Все данные о пользователе
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "403":
+          description: data problems
     post:
       tags:
       - user
@@ -168,62 +213,18 @@ paths:
       parameters:
       - in: body
         name: body
-        description: body for user content
+        description: все данные о новом пользователе(айди выберется автоматически,
+          так что можно оставлять 0)
         required: true
         schema:
           $ref: '#/definitions/models.User'
       responses:
         "200":
-          description: '{int} models.User.User_id'
+          description: ""
+          schema:
+            $ref: '#/definitions/controllers.UserPostResponseExample'
         "403":
           description: body is empty
-  /user/{uid}:
-    get:
-      tags:
-      - user
-      description: |-
-        get user by uid
-        <br>
-      operationId: UserController.Get
-      parameters:
-      - in: path
-        name: uid
-        description: The uid
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.User'
-        "403":
-          description: :uid is empty
-    put:
-      tags:
-      - user
-      description: |-
-        update the user
-        <br>
-      operationId: UserController.Update
-      parameters:
-      - in: path
-        name: uid
-        description: The uid you want to update
-        required: true
-        type: string
-      - in: body
-        name: body
-        description: body for user content
-        required: true
-        schema:
-          $ref: '#/definitions/models.User'
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.User'
-        "403":
-          description: :uid is not int
     delete:
       tags:
       - user
@@ -232,16 +233,39 @@ paths:
         <br>
       operationId: UserController.Delete
       parameters:
-      - in: path
-        name: uid
-        description: The uid you want to delete
-        required: true
-        type: string
+      - in: header
+        name: Authorization
+        description: 'хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}'
+        schema:
+          $ref: '#/definitions/true'
       responses:
         "200":
-          description: '{string} delete success!'
+          description: ""
+          schema:
+            $ref: '#/definitions/controllers.DeleteResponseExample'
         "403":
-          description: uid is empty
+          description: header problems ??
+  /user/all:
+    get:
+      tags:
+      - user
+      description: |-
+        get all Users
+        <br>
+      operationId: UserController.GetAll
+      parameters:
+      - in: header
+        name: Authorization
+        description: 'хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}'
+        schema:
+          $ref: '#/definitions/true'
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/controllers.AllUsersResponseExample'
+        "401":
+          description: :not authorized
   /user/login:
     get:
       tags:
@@ -263,7 +287,9 @@ paths:
         type: string
       responses:
         "200":
-          description: '{string} login success'
+          description: ""
+          schema:
+            $ref: '#/definitions/controllers.LoginResponseExample'
         "403":
           description: user not exist
   /user/logout:
@@ -277,34 +303,199 @@ paths:
       parameters:
       - in: header
         name: Authorization
-        description: 'Authorization header. example: Bearer {token}'
+        description: 'Хедер авторизации. example: Bearer {token}'
         schema:
           $ref: '#/definitions/true'
       responses:
         "200":
-          description: '{string} logout success'
-  /user_plants/{uid}:
+          description: ""
+          schema:
+            $ref: '#/definitions/controllers.LogoutResponseExample'
+  /user_plants/:
     get:
       tags:
       - user_plants
       description: |-
-        get UserPlant by User_id
+        По JWT токену узнаётся пользователь и получаются все его растения
         <br>
       operationId: UserPlantController.Get
       parameters:
-      - in: path
-        name: uid
-        description: user id
-        required: true
-        type: string
+      - in: header
+        name: Authorization
+        description: 'хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}'
+        schema:
+          $ref: '#/definitions/true'
       responses:
         "200":
           description: ""
           schema:
-            $ref: '#/definitions/models.Disease'
+            $ref: '#/definitions/controllers.UserPlantsResponseExample'
+    put:
+      tags:
+      - user_plants
+      description: |-
+        Обновление userplant'ов
+        <br>
+      operationId: UserPlantController.UpdateUserPlant
+      parameters:
+      - in: body
+        name: body
+        description: '<b>Все</b> данные о новом растении (даже айди юзера).<br> <b>Время
+          обязательно должно быть строго форматировано</b>: YYYY-MM-DDThh:mm:ssTZ,
+          T - просто буква, TZ - часовой пояс, для калининграда вместо TZ нужно +0200'
+        schema:
+          $ref: '#/definitions/models.UserPlant'
+      - in: header
+        name: Authorization
+        description: 'хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}'
+        schema:
+          $ref: '#/definitions/true'
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/controllers.UserPlantPutResponseExample'
+        "403":
+          description: some of data is incorrect
+    post:
+      tags:
+      - user_plants
+      description: |-
+        Создание userplant'ов
+        <br>
+      operationId: UserPlantController.CreateUserPlant
+      parameters:
+      - in: body
+        name: body
+        description: 'Данные о новом растении(айди юзера выбирается из хедера авторизации,
+          дата последнего полива - автоматом: 01.01.01 00:00:00, остальное нужно указать
+          ).<br> <b>Время обязательно должно быть строго форматировано</b>: YYYY-MM-DDThh:mm:ssTZ,
+          T - просто буква, TZ - часовой пояс, для калининграда вместо TZ нужно +0200'
+        schema:
+          $ref: '#/definitions/models.UserPlant'
+      - in: header
+        name: Authorization
+        description: 'хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}'
+        schema:
+          $ref: '#/definitions/true'
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/controllers.UserPostResponseExample'
+        "403":
+          description: some of data is incorrect
+  /user_plants/all:
+    get:
+      tags:
+      - user_plants
+      description: |-
+        Подаёшь в ссылку айди юзера вместо :uid и получаешь на выходе все растения этого пользователя
+        <br>
+      operationId: UserPlantController.GetAll
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/controllers.UserPlantsResponseExample'
         "403":
           description: :uid is empty
 definitions:
+  controllers.AllDiseasesResponseExample:
+    title: AllDiseasesResponseExample
+    type: object
+    properties:
+      Data:
+        type: array
+        items:
+          $ref: '#/definitions/models.Disease'
+      Err:
+        type: boolean
+        example: false
+  controllers.AllPlantTypesResponseExample:
+    title: AllPlantTypesResponseExample
+    type: object
+    properties:
+      Data:
+        type: array
+        items:
+          $ref: '#/definitions/models.PlantType'
+      Err:
+        type: boolean
+        example: false
+  controllers.AllUsersResponseExample:
+    title: AllUsersResponseExample
+    type: object
+    properties:
+      Data:
+        type: array
+        items:
+          $ref: '#/definitions/models.User'
+      Err:
+        type: boolean
+        example: false
+  controllers.DeleteResponseExample:
+    title: DeleteResponseExample
+    type: object
+    properties:
+      Data:
+        type: string
+        example: Delete success
+      Err:
+        type: boolean
+        example: false
+  controllers.LoginResponseExample:
+    title: LoginResponseExample
+    type: object
+    properties:
+      Data:
+        type: string
+        example: ABCDEFGH123456789.ADDBSJADSAJDN0123032.ASDNINASIDAID31213
+      Err:
+        type: boolean
+        example: false
+  controllers.LogoutResponseExample:
+    title: LogoutResponseExample
+    type: object
+    properties:
+      Data:
+        type: string
+        example: Logout success
+      Err:
+        type: boolean
+        example: false
+  controllers.UserPlantPutResponseExample:
+    title: UserPlantPutResponseExample
+    type: object
+    properties:
+      Data:
+        type: string
+        example: Успешно изменено
+      Err:
+        type: boolean
+        example: false
+  controllers.UserPlantsResponseExample:
+    title: UserPlantsResponseExample
+    type: object
+    properties:
+      Data:
+        type: array
+        items:
+          $ref: '#/definitions/models.UserPlant'
+      Err:
+        type: boolean
+        example: false
+  controllers.UserPostResponseExample:
+    title: UserPostResponseExample
+    type: object
+    properties:
+      Data:
+        type: integer
+        example: 1
+        format: int64
+      Err:
+        type: boolean
+        example: false
   models.Disease:
     title: Disease
     type: object
@@ -335,12 +526,20 @@ definitions:
     title: PlantType
     type: object
     properties:
+      Bio_Name:
+        type: string
+      Description:
+        type: string
+      Image_Link:
+        type: string
+      LightPreference:
+        type: string
       Name:
         type: string
       PlantType_id:
         type: integer
         format: int64
-      Treatment:
+      TemperaturePreference:
         type: string
       WateringFrequency:
         type: integer
@@ -359,6 +558,30 @@ definitions:
       Password:
         type: string
       User_id:
+        type: integer
+        format: int64
+  models.UserPlant:
+    title: UserPlant
+    type: object
+    properties:
+      DateOfLastWatering:
+        type: string
+        format: datetime
+      DateOfPlanting:
+        type: string
+        format: datetime
+      Disease_id:
+        type: integer
+        format: int64
+      Nickname:
+        type: string
+      PlantType_id:
+        type: integer
+        format: int64
+      User_id:
+        type: integer
+        format: int64
+      UserPlant_id:
         type: integer
         format: int64
   "true":
@@ -380,3 +603,6 @@ tags:
 - name: notifications
   description: |
     Operations about Notifications (as of now, only used in WebSockets, probably wont go in the final app)
+- name: identify
+  description: |
+    Operations about Identyf

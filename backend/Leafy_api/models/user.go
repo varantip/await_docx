@@ -60,14 +60,21 @@ func VerifyToken(tokenString string) (jwt.MapClaims, error) {
 	return token.Claims.(jwt.MapClaims), nil
 }
 
-func AddUser(u User) int64 {
+func AddUser(u User) (int64, error) {
 	o := orm.NewOrmUsingDB("Leafy")
+	qb, _ := orm.NewQueryBuilder("postgres")
 	fmt.Println(u.User_id, u.Login, u.Name, u.Password)
+	var checkUser User //будем проверять существование пользователя
+	o.Raw(qb.Select("User_id", "Name", "Login", "Password").From("User").Where(fmt.Sprintf(`"Login" = '%s'`, u.Login)).Limit(1).String()).QueryRow(&checkUser)
+	if checkUser.Password != "" {
+		return 0, errors.New("пользователь с таким логином уже существует")
+	}
 	id, err := o.Insert(&u)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return id
+
+	return id, nil
 }
 
 func GetUser(uid int64) (u *User, err error) {

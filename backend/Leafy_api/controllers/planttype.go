@@ -12,9 +12,14 @@ type PlantTypeController struct {
 	beego.Controller
 }
 
+type AllPlantTypesResponseExample struct {
+	Err  bool               `json:"Err" example:"false"`
+	Data []models.PlantType `json:"Data"`
+}
+
 // @Title GetAll
 // @Description get all PlantTypes
-// @Success 200 {object} models.PlantType
+// @Success 200 {object} controllers.AllPlantTypesResponseExample
 // @router / [get]
 func (pt *PlantTypeController) GetAll() {
 	ptypes := models.GetAllPlantTypes()
@@ -24,7 +29,7 @@ func (pt *PlantTypeController) GetAll() {
 
 // @Title Get
 // @Description get plant_type by id
-// @Param	id		path 	string	true		"The key for staticblock"
+// @Param	id		path 	string	true		"айди типа растения"
 // @Success 200 {object} models.PlantType
 // @Failure 403 :id is empty
 // @router /:id [get]

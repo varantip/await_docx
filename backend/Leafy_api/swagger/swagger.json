@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "beego Test API",
-        "description": "beego has a very cool tools to autogenerate documents for your API\n",
+        "title": "Leafy API",
+        "description": "API Documentation for Leafy app\n",
         "version": "1.0.0",
         "termsOfService": "http://beego.me/",
         "contact": {
@@ -26,7 +26,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/models.PlantType"
+                            "$ref": "#/definitions/controllers.AllPlantTypesResponseExample"
                         }
                     }
                 }
@@ -43,7 +43,7 @@
                     {
                         "in": "path",
                         "name": "id",
-                        "description": "The key for staticblock",
+                        "description": "айди типа растения",
                         "required": true,
                         "type": "string"
                     }
@@ -72,7 +72,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/models.Disease"
+                            "$ref": "#/definitions/controllers.AllDiseasesResponseExample"
                         }
                     }
                 }
@@ -89,7 +89,7 @@
                     {
                         "in": "path",
                         "name": "id",
-                        "description": "The key for staticblock",
+                        "description": "Айди заболевания",
                         "required": true,
                         "type": "string"
                     }
@@ -107,6 +107,32 @@
                 }
             }
         },
+        "/identify/": {
+            "post": {
+                "tags": [
+                    "identify"
+                ],
+                "description": "identify a disease.\n\u003cbr\u003e",
+                "operationId": "IdentController.Ident a disease",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "body",
+                        "description": "true",
+                        "type": "file"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        },
         "/notifications/": {
             "post": {
                 "tags": [
@@ -118,7 +144,7 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "The notfication, date specified like so: YYYY-MM-DD hh:mm:ss+tz (for kaliningrad = 02)",
+                        "description": "The notfication, date specified like so: YYYY-MM-DDThh:mm:sstz (for kaliningrad tz = +0200)",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/models.Notification"
@@ -188,13 +214,13 @@
                 "tags": [
                     "user"
                 ],
-                "description": "get all Users\n\u003cbr\u003e",
-                "operationId": "UserController.GetAll",
+                "description": "get user using jwt token\n\u003cbr\u003e",
+                "operationId": "UserController.Get",
                 "parameters": [
                     {
                         "in": "header",
                         "name": "Authorization",
-                        "description": "Authorization header. example: Bearer {token}",
+                        "description": "хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}",
                         "schema": {
                             "$ref": "#/definitions/true"
                         }
@@ -207,8 +233,45 @@
                             "$ref": "#/definitions/models.User"
                         }
                     },
-                    "401": {
-                        "description": ":not authorized"
+                    "404": {
+                        "description": "no such user"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "user"
+                ],
+                "description": "update the user\n\u003cbr\u003e",
+                "operationId": "UserController.Update",
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}",
+                        "schema": {
+                            "$ref": "#/definitions/true"
+                        }
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Все данные о пользователе",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    },
+                    "403": {
+                        "description": "data problems"
                     }
                 }
             },
@@ -222,7 +285,7 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "body for user content",
+                        "description": "все данные о новом пользователе(айди выберется автоматически, так что можно оставлять 0)",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/models.User"
@@ -231,10 +294,71 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{int} models.User.User_id"
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.UserPostResponseExample"
+                        }
                     },
                     "403": {
                         "description": "body is empty"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "user"
+                ],
+                "description": "delete the user\n\u003cbr\u003e",
+                "operationId": "UserController.Delete",
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}",
+                        "schema": {
+                            "$ref": "#/definitions/true"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.DeleteResponseExample"
+                        }
+                    },
+                    "403": {
+                        "description": "header problems ??"
+                    }
+                }
+            }
+        },
+        "/user/all": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "description": "get all Users\n\u003cbr\u003e",
+                "operationId": "UserController.GetAll",
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}",
+                        "schema": {
+                            "$ref": "#/definitions/true"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.AllUsersResponseExample"
+                        }
+                    },
+                    "401": {
+                        "description": ":not authorized"
                     }
                 }
             }
@@ -264,7 +388,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{string} login success"
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.LoginResponseExample"
+                        }
                     },
                     "403": {
                         "description": "user not exist"
@@ -283,7 +410,7 @@
                     {
                         "in": "header",
                         "name": "Authorization",
-                        "description": "Authorization header. example: Bearer {token}",
+                        "description": "Хедер авторизации. example: Bearer {token}",
                         "schema": {
                             "$ref": "#/definitions/true"
                         }
@@ -291,60 +418,61 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{string} logout success"
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.LogoutResponseExample"
+                        }
                     }
                 }
             }
         },
-        "/user/{uid}": {
+        "/user_plants/": {
             "get": {
                 "tags": [
-                    "user"
+                    "user_plants"
                 ],
-                "description": "get user by uid\n\u003cbr\u003e",
-                "operationId": "UserController.Get",
+                "description": "По JWT токену узнаётся пользователь и получаются все его растения\n\u003cbr\u003e",
+                "operationId": "UserPlantController.Get",
                 "parameters": [
                     {
-                        "in": "path",
-                        "name": "uid",
-                        "description": "The uid",
-                        "required": true,
-                        "type": "string"
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}",
+                        "schema": {
+                            "$ref": "#/definitions/true"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/controllers.UserPlantsResponseExample"
                         }
-                    },
-                    "403": {
-                        "description": ":uid is empty"
                     }
                 }
             },
             "put": {
                 "tags": [
-                    "user"
+                    "user_plants"
                 ],
-                "description": "update the user\n\u003cbr\u003e",
-                "operationId": "UserController.Update",
+                "description": "Обновление userplant'ов\n\u003cbr\u003e",
+                "operationId": "UserPlantController.UpdateUserPlant",
                 "parameters": [
-                    {
-                        "in": "path",
-                        "name": "uid",
-                        "description": "The uid you want to update",
-                        "required": true,
-                        "type": "string"
-                    },
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "body for user content",
-                        "required": true,
+                        "description": "\u003cb\u003eВсе\u003c/b\u003e данные о новом растении (даже айди юзера).\u003cbr\u003e \u003cb\u003eВремя обязательно должно быть строго форматировано\u003c/b\u003e: YYYY-MM-DDThh:mm:ssTZ, T - просто буква, TZ - часовой пояс, для калининграда вместо TZ нужно +0200",
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/models.UserPlant"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}",
+                        "schema": {
+                            "$ref": "#/definitions/true"
                         }
                     }
                 ],
@@ -352,60 +480,63 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/controllers.UserPlantPutResponseExample"
                         }
                     },
                     "403": {
-                        "description": ":uid is not int"
+                        "description": "some of data is incorrect"
                     }
                 }
             },
-            "delete": {
+            "post": {
                 "tags": [
-                    "user"
+                    "user_plants"
                 ],
-                "description": "delete the user\n\u003cbr\u003e",
-                "operationId": "UserController.Delete",
+                "description": "Создание userplant'ов\n\u003cbr\u003e",
+                "operationId": "UserPlantController.CreateUserPlant",
                 "parameters": [
                     {
-                        "in": "path",
-                        "name": "uid",
-                        "description": "The uid you want to delete",
-                        "required": true,
-                        "type": "string"
+                        "in": "body",
+                        "name": "body",
+                        "description": "Данные о новом растении(айди юзера выбирается из хедера авторизации, дата последнего полива - автоматом: 01.01.01 00:00:00, остальное нужно указать ).\u003cbr\u003e \u003cb\u003eВремя обязательно должно быть строго форматировано\u003c/b\u003e: YYYY-MM-DDThh:mm:ssTZ, T - просто буква, TZ - часовой пояс, для калининграда вместо TZ нужно +0200",
+                        "schema": {
+                            "$ref": "#/definitions/models.UserPlant"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "хедер Авторизации. пример(фигурные скобки убрать): Bearer {token}",
+                        "schema": {
+                            "$ref": "#/definitions/true"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "{string} delete success!"
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.UserPostResponseExample"
+                        }
                     },
                     "403": {
-                        "description": "uid is empty"
+                        "description": "some of data is incorrect"
                     }
                 }
             }
         },
-        "/user_plants/{uid}": {
+        "/user_plants/all": {
             "get": {
                 "tags": [
                     "user_plants"
                 ],
-                "description": "get UserPlant by User_id\n\u003cbr\u003e",
-                "operationId": "UserPlantController.Get",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "uid",
-                        "description": "user id",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
+                "description": "Подаёшь в ссылку айди юзера вместо :uid и получаешь на выходе все растения этого пользователя\n\u003cbr\u003e",
+                "operationId": "UserPlantController.GetAll",
                 "responses": {
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/models.Disease"
+                            "$ref": "#/definitions/controllers.UserPlantsResponseExample"
                         }
                     },
                     "403": {
@@ -416,6 +547,141 @@
         }
     },
     "definitions": {
+        "controllers.AllDiseasesResponseExample": {
+            "title": "AllDiseasesResponseExample",
+            "type": "object",
+            "properties": {
+                "Data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Disease"
+                    }
+                },
+                "Err": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "controllers.AllPlantTypesResponseExample": {
+            "title": "AllPlantTypesResponseExample",
+            "type": "object",
+            "properties": {
+                "Data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.PlantType"
+                    }
+                },
+                "Err": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "controllers.AllUsersResponseExample": {
+            "title": "AllUsersResponseExample",
+            "type": "object",
+            "properties": {
+                "Data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.User"
+                    }
+                },
+                "Err": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "controllers.DeleteResponseExample": {
+            "title": "DeleteResponseExample",
+            "type": "object",
+            "properties": {
+                "Data": {
+                    "type": "string",
+                    "example": "Delete success"
+                },
+                "Err": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "controllers.LoginResponseExample": {
+            "title": "LoginResponseExample",
+            "type": "object",
+            "properties": {
+                "Data": {
+                    "type": "string",
+                    "example": "ABCDEFGH123456789.ADDBSJADSAJDN0123032.ASDNINASIDAID31213"
+                },
+                "Err": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "controllers.LogoutResponseExample": {
+            "title": "LogoutResponseExample",
+            "type": "object",
+            "properties": {
+                "Data": {
+                    "type": "string",
+                    "example": "Logout success"
+                },
+                "Err": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "controllers.UserPlantPutResponseExample": {
+            "title": "UserPlantPutResponseExample",
+            "type": "object",
+            "properties": {
+                "Data": {
+                    "type": "string",
+                    "example": "Успешно изменено"
+                },
+                "Err": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "controllers.UserPlantsResponseExample": {
+            "title": "UserPlantsResponseExample",
+            "type": "object",
+            "properties": {
+                "Data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserPlant"
+                    }
+                },
+                "Err": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "controllers.UserPostResponseExample": {
+            "title": "UserPostResponseExample",
+            "type": "object",
+            "properties": {
+                "Data": {
+                    "type": "integer",
+                    "example": 1,
+                    "format": "int64"
+                },
+                "Err": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
         "models.Disease": {
             "title": "Disease",
             "type": "object",
@@ -457,6 +723,18 @@
             "title": "PlantType",
             "type": "object",
             "properties": {
+                "Bio_Name": {
+                    "type": "string"
+                },
+                "Description": {
+                    "type": "string"
+                },
+                "Image_Link": {
+                    "type": "string"
+                },
+                "LightPreference": {
+                    "type": "string"
+                },
                 "Name": {
                     "type": "string"
                 },
@@ -464,7 +742,7 @@
                     "type": "integer",
                     "format": "int64"
                 },
-                "Treatment": {
+                "TemperaturePreference": {
                     "type": "string"
                 },
                 "WateringFrequency": {
@@ -489,6 +767,39 @@
                 },
                 "Password": {
                     "type": "string"
+                },
+                "User_id": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "models.UserPlant": {
+            "title": "UserPlant",
+            "type": "object",
+            "properties": {
+                "DateOfLastWatering": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "DateOfPlanting": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "Disease_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "Nickname": {
+                    "type": "string"
+                },
+                "PlantType_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "UserPlant_id": {
+                    "type": "integer",
+                    "format": "int64"
                 },
                 "User_id": {
                     "type": "integer",
@@ -521,6 +832,10 @@
         {
             "name": "notifications",
             "description": "Operations about Notifications (as of now, only used in WebSockets, probably wont go in the final app)\n"
+        },
+        {
+            "name": "identify",
+            "description": "Operations about Identyf\n"
         }
     ]
 }

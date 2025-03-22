@@ -1,6 +1,6 @@
 // @APIVersion 1.0.0
-// @Title beego Test API
-// @Description beego has a very cool tools to autogenerate documents for your API
+// @Title Leafy API
+// @Description API Documentation for Leafy app
 // @Contact astaxie@gmail.com
 // @TermsOfServiceUrl http://beego.me/
 // @License Apache 2.0
@@ -19,6 +19,8 @@ func init() {
 			beego.NSInclude(
 				&controllers.UserController{},
 			),
+			beego.NSRouter("/", &controllers.UserController{}, "get:Get"),
+			beego.NSRouter("/all", &controllers.UserController{}, "get:GetAll"),
 		),
 		beego.NSNamespace("/base_plants",
 			beego.NSInclude(
@@ -34,14 +36,22 @@ func init() {
 			beego.NSInclude(
 				&controllers.UserPlantController{},
 			),
+			beego.NSRouter("/", &controllers.UserPlantController{}, "get:Get"),
+			beego.NSRouter("/all", &controllers.UserPlantController{}, "get:GetAll"),
 		),
 		beego.NSNamespace("/notifications",
 			beego.NSInclude(
 				&controllers.NotificationController{},
 			),
 		),
+		beego.NSNamespace("/identify",
+			beego.NSInclude(
+				&controllers.IdentController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
+	beego.SetStaticPath("/v1/assets", "assets")
 	beego.Router("/ws", &controllers.WebSocketController{})
 	beego.Router("/notifs", &controllers.WebSocketController{}, "get:ViewNotifs")
 }
